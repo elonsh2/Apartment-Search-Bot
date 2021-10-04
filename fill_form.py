@@ -1,16 +1,19 @@
 from selenium import webdriver
 import time
-FORMS_LINK = 'https://forms.gle/VmrZDQvDLGT9D7GR8'
+from os import environ
 
 
 class FillForm:
     def __init__(self, addresses_list: list, prices_list: list, details_list: list):
-        chrome_driver_path = "C:\\Development\\chromedriver.exe"
-        self.driver = webdriver.Chrome(executable_path=chrome_driver_path)
-        self.driver.get(FORMS_LINK)
-        time.sleep(0.1)
-        for item in range(len(addresses_list)):
-            self.fill_form(addresses_list[item], prices_list[item], details_list[item])
+        self.driver = webdriver.Chrome(executable_path=environ['CHROME_DRIVER_PATH'])
+        self.driver.get(environ['FORMS_LINK'])
+        time.sleep(0.2)
+        try:
+            for item in range(len(addresses_list)):
+                self.fill_form(addresses_list[item], prices_list[item], details_list[item])
+        except IndexError:
+            self.driver.quit()
+            return
 
     def fill_form(self, address, price, details):
         inputs = self.driver.find_elements_by_css_selector('.quantumWizTextinputPaperinputInput.exportInput')

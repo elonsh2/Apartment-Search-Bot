@@ -1,15 +1,22 @@
 from bs4 import BeautifulSoup
 import requests
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
-    'Accept-Language': 'he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7'
+from os import environ
+HEADERS = {
+    'User-Agent': environ['OWN_USER_AGENT'],
+    'Accept-Language': 'he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7',
+    'referer': 'https://www.google.com/',
+    'Host': 'www.yad2.co.il',
+    "Connection": "keep-alive",
+    'cookie': environ['OWN_COOKIE_HEADER']
+
+
 }
 APARTMENTS_LINK = 'https://www.yad2.co.il/realestate/rent?topArea=100&area=7&city=3000&price=-1-4000&Order=1&priceOnly=1'
 
 
 class GetData:
     def __init__(self):
-        self.response = requests.get(url=APARTMENTS_LINK, headers=headers)
+        self.response = requests.get(url=APARTMENTS_LINK, headers=HEADERS)
         self.web_page = self.response.text
         self.soup = BeautifulSoup(self.web_page, 'html.parser')
         self.feed_list = self.soup.find(class_='feed_list')
